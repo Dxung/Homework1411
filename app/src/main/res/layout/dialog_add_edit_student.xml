@@ -1,6 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="200dp"
+        android:maxWidth="488dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/input_name_textView"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:labelFor="@+id/input_name_editText"
+            android:textSize="16sp"
+            android:text="@string/student_name_input_textView"/>
+
+        <EditText
+            android:id="@+id/input_name_editText"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:autofillHints="Student Name"
+            android:inputType="text"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:maxWidth="488dp"
+        android:minWidth="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/input_Id_textView"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:labelFor="@+id/input_Id_editText"
+            android:textSize="16sp"
+            android:text="@string/student_id_input_textView"/>
+
+        <EditText
+            android:id="@+id/input_Id_editText"
+            android:layout_width="match_parent"
+            android:maxWidth="488dp"
+            android:layout_height="48dp"
+            android:autofillHints="Student Name"
+            android:inputType="text"/>
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+
+</LinearLayout>

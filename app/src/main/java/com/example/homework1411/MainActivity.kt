@@ -1,22 +1,17 @@
 package com.example.homework1411
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.app.AlertDialog
-import android.view.LayoutInflater
-import android.widget.EditText
-import android.widget.Toast
-import android.view.View
 
 class MainActivity : AppCompatActivity() {
-    private var dialogView: View? = null
     private lateinit var addNewButton : Button
+    private var students: MutableList<StudentModel> = mutableListOf()
+    private lateinit var studentAdapter : StudentAdapter
+    private lateinit var tempUndoData : StudentModel
 
 
 
@@ -25,7 +20,29 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initProp()
 
-        val students = mutableListOf(
+        //Khởi tạo các nút
+        setupAddNewButton()
+
+    }
+
+    private fun initProp(){
+        addNewButton = findViewById(R.id.btn_add_new)
+        FirstInitAdaptor()
+        InitTempUndoData(students)
+
+    }
+
+    //Setup First TempData
+    private fun InitTempUndoData(list: MutableList<StudentModel>){
+        if(list.isNotEmpty()) {
+            tempUndoData = students[0]
+        }
+    }
+
+    //Setup Adaptor
+    private fun FirstInitAdaptor(){
+        //Thêm danh sách dữ liệu cho adaptor
+        students.addAll(listOf(
             StudentModel("Nguyễn Văn An", "SV001"),
             StudentModel("Trần Thị Bảo", "SV002"),
             StudentModel("Lê Hoàng Cường", "SV003"),
@@ -46,36 +63,66 @@ class MainActivity : AppCompatActivity() {
             StudentModel("Trần Văn Tài", "SV018"),
             StudentModel("Phạm Thị Tuyết", "SV019"),
             StudentModel("Lê Văn Vũ", "SV020")
-        )
+        ))
 
-        val studentAdapter = StudentAdapter(students)
+        //Khởi tạo adaptor
+        studentAdapter = StudentAdapter(students, ::setupEditButton, ::setupDeleteButton)
+
+        //khởi tạo thuộc tính cho RecyclerView
         findViewById<RecyclerView>(R.id.recycler_view_students).run {
             adapter = studentAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
         }
-    }
 
-    private fun initProp(){
-        addNewButton = findViewById<Button>(R.id.btn_add_new)
     }
 
     //Add New Student Func
-    fun setupNewButton (){
+    private fun setupAddNewButton (){
         //Xử lý sự kiện khi ấn nút "New Button"
         addNewButton.setOnClickListener {
-            if(dialogView == null) {
-                dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_edit_student, null)
-            }
+            val addNewStudentDialog = AddStudentDialog(::updateAddRecyclerListData)
+            addNewStudentDialog.show(supportFragmentManager, "AddNewStudentDialog")
         }
     }
 
-    fun setupEditButton(){
+    private fun setupEditButton(student: StudentModel, pos: Int){
+        val editStudentDialog = EditStudentDialog (student,::updateEditRecyclerListData, pos)
+        editStudentDialog.show(supportFragmentManager, "EditNewStudentDialog")
+    }
+
+    private fun setupDeleteButton(pos: Int, view: View){
+        val deleteStudentDialog = DeleteStudentDialog (::updateDeleteRecyclerListData,::undoDeleteRecyclerListData ,pos, view)
+        deleteStudentDialog.show(supportFragmentManager, "DeleteStudentDialog")
+    }
+
+    private fun updateAddRecyclerListData(student: StudentModel){
+        students.add(student)
+        studentAdapter.notifyItemInserted(students.size-1)
+    }
+
+    private fun updateEditRecyclerListData(student: StudentModel, pos: Int){
+        students[pos] = student
+        studentAdapter.notifyItemChanged(pos)
+    }
+
+    private fun updateDeleteRecyclerListData(position: Int){
+        tempUndoData = students.removeAt(position)
+        studentAdapter.notifyItemRemoved(position)
+    }
+
+    private fun undoDeleteRecyclerListData(position: Int){
+        if(position == students.size - 1){
+            students.add(tempUndoData)
+
+        }else{
+            students.add(position, tempUndoData)
+        }
+
+        studentAdapter.notifyItemInserted(position)
 
     }
 
-    fun setupDeleteButton(){
 
-    }
 
 
 

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Homework1411</string>
+    <string name="student_name_input_textView">Student Name</string>
+    <string name="student_id_input_textView">Student ID</string>
 </resources>
